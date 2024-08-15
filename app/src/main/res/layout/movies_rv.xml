@@ -14,27 +14,36 @@
 
         <ImageView
             android:id="@+id/movie_imageview"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
             android:layout_margin="5dp"/>
 
         <TextView
             android:id="@+id/rating_tv"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/urbanistsemibold"
             android:textFontWeight="600"
             android:lineHeight="15dp"
-            android:textSize="10sp"
+            android:textSize="15sp"
             android:textColor="#FFFFFF"
             android:textAlignment="center"
             android:gravity="center"
             android:background="@drawable/textview_round_corner_red"
             android:padding="5dp"
             android:layout_gravity="top|start"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"/>
+
+        <ImageView
+            android:id="@+id/movie_addRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/baseline_add_24"
+            android:background="@drawable/textview_round_corner_red"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"/>
 
     </FrameLayout>
 

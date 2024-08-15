@@ -1,14 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MylistFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/mylist_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="back arrow"
+        android:src="@drawable/logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mylist_title"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="59dp" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/mylist_title"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="5dp"
+        android:contentDescription="title"
+        android:fontFamily="@font/urbanistbold"
+        android:lineHeight="28.8dp"
+        android:text="My List"
+        android:textAlignment="viewStart"
+        android:padding="9dp"
+        android:textColor="#212121"
+        android:textFontWeight="700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@id/mylist_logo"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</FrameLayout>
+<!--    <ImageView-->
+<!--        android:id="@+id/mylist_search"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_marginStart="140dp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:contentDescription="search"-->
+<!--        android:src="@drawable/search_black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/mylist_title"-->
+<!--        tools:layout_editor_absoluteY="56dp" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_mylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="20dp"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mylist_title"
+        app:layout_constraintVertical_bias="0.074"
+        app:spanCount="2" />
+
+    <ImageView
+        android:id="@+id/imageview_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/empty_mylist"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mylist_title"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

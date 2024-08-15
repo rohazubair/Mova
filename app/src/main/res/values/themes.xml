@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
-        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
-    </style>
-
-    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
-    </style>
-
-    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
-        <item name="backgroundTint">#ffffff</item>
-        <item name="itemIconTint">#9E9E9E</item>
-        <item name="itemTextColor">#9E9E9E</item>
-    </style>-->
 
     <style name="Theme.App" parent="Theme.Material3.Light.NoActionBar">
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
@@ -23,10 +10,15 @@
     </style>
 
     <style name="ThemeOverlay.App.BottomNavigationView" parent="ThemeOverlay.Material3.Light">
-        <item name="backgroundTint">#FFFFFF</item>
-        <item name="itemIconTint">@drawable/nav_item_color_selector</item>
-        <item name="itemTextColor">@drawable/nav_item_color_selector</item>
-        <item name="itemBackground">@drawable/nav_item_background_selector</item>
+        <item name="itemIconTint">@color/nav_item_color</item>
+    </style>
+
+    <style name="CustomChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="chipStrokeColor">@color/chip_stroke_selector</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+        <item name="checkedIconVisible">false</item>
     </style>
 
 </resources>

@@ -3,14 +3,14 @@
     <item
         android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/home"/>
+        android:icon="@drawable/home_selector"/>
     <item
         android:id="@+id/explore"
         android:title="Explore"
-        android:icon="@drawable/explore"/>
+        android:icon="@drawable/explore_selector"/>
     <item
         android:id="@+id/mylist"
         android:title="My List"
-        android:icon="@drawable/mylist"/>
+        android:icon="@drawable/mylist_selector"/>
 </menu>
 

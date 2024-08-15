@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/top_10_movies"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/movie_imageview"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/rating_tv"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/urbanistsemibold"
+            android:textFontWeight="600"
+            android:lineHeight="15dp"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:background="@drawable/textview_round_corner_red"
+            android:padding="5dp"
+            android:layout_gravity="top|start"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"/>
+
+        <ImageView
+            android:id="@+id/movie_addRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/baseline_clear_24"
+            android:background="@drawable/textview_round_corner_red"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -27,19 +28,19 @@ class MyListFragment : Fragment(R.layout.fragment_mylist) {
     private lateinit var repository : MovieRepository
 
     private val movieAdapterListener=object: MoviesAdapter.Listener{
-        override fun addMovie(movie: MovieDataModal) {
-            viewModel.insertMovie(movie)
+        override fun addRemoveMovie(movie: MovieDataModal) {
+            viewModel.deleteMovie(movie.id)
         }
 
-        override fun deleteMovie(movieId: Int) {
-            viewModel.deleteMovie(movieId)
-        }
+//        override fun deleteMovie(movieId: Int) {
+//            viewModel.deleteMovie(movieId)
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myListMoviesAdapter = MoviesAdapter(movieAdapterListener)
+        myListMoviesAdapter = MoviesAdapter(R.layout.movies_rv_mylist, movieAdapterListener)
 
         myListMoviesRecyclerView= view.findViewById(R.id.rv_mylist)
         imageviewEmptyList= view.findViewById(R.id.imageview_empty)
@@ -51,15 +52,29 @@ class MyListFragment : Fragment(R.layout.fragment_mylist) {
         movieDao = database.movieDao()
         repository = MovieRepository.getInstance(apiService, movieDao)
         viewModel.setRepository(repository)
-
         viewModel.loadMovies()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.movies.collect { movies ->
                     myListMoviesAdapter.submitList(movies)
+                    if (movies.isNotEmpty()) {
+                        showMyList()
+                    } else {
+                        showEmptyListImage()
+                    }
                 }
             }
         }
+    }
+
+    private fun showEmptyListImage() {
+        myListMoviesRecyclerView.visibility = View.GONE
+        imageviewEmptyList.visibility = View.VISIBLE
+    }
+
+    private fun showMyList() {
+        myListMoviesRecyclerView.visibility = View.VISIBLE
+        imageviewEmptyList.visibility = View.GONE
     }
 }

@@ -1,78 +1,220 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/header_image_fl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/top_10_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/header_image"
+                android:layout_width="match_parent"
+                android:layout_height="370dp"
+                android:scaleType="fitXY"
+                android:contentDescription="header image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+            
+            <ImageView
+                android:id="@+id/home_logo_imageview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/logo"
+                android:contentDescription="logo"
+                android:layout_marginTop="60dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="top|start"/>
+
+            <ImageView
+                android:id="@+id/home_search_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/search"
+                android:contentDescription="search"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="90dp"
+                android:layout_gravity="top|end"/>
+
+            <ImageView
+                android:id="@+id/home_bell_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bell"
+                android:contentDescription="notification bell"
+                android:layout_marginStart="30dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="60dp"
+                android:layout_gravity="top|end"/>
+
+            <TextView
+                android:id="@+id/home_header_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="header movie title"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="210dp"
+                android:textFontWeight="700"
+                android:textAlignment="viewStart"
+                android:fontFamily="@font/urbanistbold"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="35sp"
+                android:lineHeight="28.8dp"/>
+
+            <Button
+                android:id="@+id/home_header_play_btn"
+                android:layout_width="130dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="270dp"
+                android:background="@drawable/btn_rounded_corner"
+                android:contentDescription="play button"
+                android:drawableStart="@drawable/baseline_play_circle_filled_24"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/urbanistmedium"
+                android:lineHeight="19.6dp"
+                android:text="Play"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textFontWeight="600"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/home_header_plus_btn"
+                android:layout_width="130dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="270dp"
+                android:background="@drawable/btn_transparent_roundcorners_whiteborders"
+                android:contentDescription="plus button"
+                android:drawableStart="@drawable/baseline_add_24"
+                android:fontFamily="@font/urbanistmedium"
+                android:lineHeight="19.6dp"
+                android:padding="5dp"
+                android:text="My List"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textFontWeight="600"
+                android:textSize="20sp" />
 
 
-    <ImageView
-        android:id="@+id/header_image"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:src="@drawable/doctorstrange"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"/>
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/top_10_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Top 10 Movies This Week"
-        android:textSize="20sp"
-        android:textFontWeight="700"
-        android:lineHeight="24dp"
-        android:textAlignment="viewStart"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/header_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="20dp"
-        android:fontFamily="@font/urbanistbold"
-        />
+        <TextView
+            android:id="@+id/top_10_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Top 10 Movies This Week"
+            android:textSize="20sp"
+            android:textFontWeight="700"
+            android:lineHeight="24dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintWidth_percent="0.75"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/header_image_fl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/see_all_tv1"
+            android:padding="20dp"
+            android:fontFamily="@font/urbanistbold" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/top_10_movies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_10_title">
+        <TextView
+            android:id="@+id/see_all_tv1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:lineHeight="19.6dp"
+            android:textFontWeight="600"
+            android:textSize="14sp"
+            android:fontFamily="@font/urbanistsemibold"
+            android:textAlignment="viewEnd"
+            android:textColor="#E21221"
+            app:layout_constraintWidth_percent="0.25"
+            app:layout_constraintStart_toEndOf="@id/top_10_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_image_fl"
+            app:layout_constraintBottom_toTopOf="@id/top_10_movies"
+            android:text="See all"/>
 
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/new_releases_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="New Releases"
-        android:textSize="20sp"
-        android:textFontWeight="700"
-        android:lineHeight="24dp"
-        android:textAlignment="viewStart"
-        android:fontFamily="@font/urbanistbold"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/top_10_movies"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="20dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/new_releases"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/new_releases_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_10_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top_10_title">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/new_releases_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="New Releases"
+            android:textSize="20sp"
+            android:textFontWeight="700"
+            android:lineHeight="24dp"
+            android:textAlignment="viewStart"
+            android:fontFamily="@font/urbanistbold"
+            android:textColor="@android:color/black"
+            app:layout_constraintWidth_percent="0.75"
+            app:layout_constraintTop_toBottomOf="@+id/top_10_movies"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/see_all_tv2"
+            android:padding="20dp"/>
+
+        <TextView
+            android:id="@+id/see_all_tv2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:lineHeight="19.6dp"
+            android:textFontWeight="600"
+            android:textSize="14sp"
+            android:fontFamily="@font/urbanistsemibold"
+            android:textAlignment="viewEnd"
+            android:textColor="#E21221"
+            app:layout_constraintWidth_percent="0.25"
+            app:layout_constraintStart_toEndOf="@id/new_releases_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_10_movies"
+            app:layout_constraintBottom_toTopOf="@id/new_releases"
+            android:text="See all"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/new_releases"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/new_releases_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+

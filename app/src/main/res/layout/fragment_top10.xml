@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/top10_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="back arrow"
+        android:src="@drawable/backarrow_black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/top10_title"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="59dp" />
+
+    <TextView
+        android:id="@+id/top10_title"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="title"
+        android:fontFamily="@font/urbanistbold"
+        android:lineHeight="28.8dp"
+        android:text="Top 10 Movies This Week"
+        android:textAlignment="viewStart"
+        android:padding="9dp"
+        android:textColor="#212121"
+        android:textFontWeight="700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@id/top10_back"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="72dp" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/top10_search"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:contentDescription="search"-->
+<!--        android:src="@drawable/search_black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/top10_title"-->
+<!--        tools:layout_editor_absoluteY="56dp" />-->
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_top10_movies"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top10_title"
+        app:spanCount="2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

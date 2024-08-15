@@ -1,81 +1,161 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val viewModel: MovieViewModel by activityViewModels()
+
+    private lateinit var topRatedMoviesAdapter: MoviesAdapter
+    private lateinit var newReleasedMoviesAdapter: MoviesAdapter
+
+    private lateinit var headerImage: ImageView
+    private lateinit var headerTitle: TextView
+    private lateinit var textviewSeeAll1 : TextView
+    private lateinit var textviewSeeAll2 : TextView
+
+    private lateinit var database : MovieDatabase
+    private lateinit var apiService : TmdbApiService
+    private lateinit var movieDao : MovieDao
+    private lateinit var repository : MovieRepository
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var currentIndex = 0
+
+    private val movieAdapterListener=object: MoviesAdapter.Listener{
+        override fun addRemoveMovie(movie: MovieDataModal) {
+            viewModel.insertMovie(movie)
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+//        override fun deleteMovie(movieId: Int) {
+//            viewModel.deleteMovie(movieId)
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView1: RecyclerView = view.findViewById(R.id.top_10_movies)
+        topRatedMoviesAdapter = MoviesAdapter(listener = movieAdapterListener)
+        newReleasedMoviesAdapter = MoviesAdapter(listener = movieAdapterListener)
 
-        val recyclerView2: RecyclerView = view.findViewById(R.id.new_releases)
+        view.findViewById<RecyclerView>(R.id.top_10_movies).adapter = topRatedMoviesAdapter
+        view.findViewById<RecyclerView>(R.id.new_releases).adapter = newReleasedMoviesAdapter
 
-        val myList = listOf(
-            MovieDataModal("3.5", "https://upload.wikimedia.org/wikipedia/en/1/18/Benedict_Cumberbatch_as_Doctor_Strange.jpeg"),
-            MovieDataModal("2.0", "https://upload.wikimedia.org/wikipedia/en/1/18/Benedict_Cumberbatch_as_Doctor_Strange.jpeg"),
-            MovieDataModal("4.3", "https://upload.wikimedia.org/wikipedia/en/1/18/Benedict_Cumberbatch_as_Doctor_Strange.jpeg"),
-            MovieDataModal("4.5", "https://upload.wikimedia.org/wikipedia/en/1/18/Benedict_Cumberbatch_as_Doctor_Strange.jpeg"),
-            MovieDataModal("5.0", "https://upload.wikimedia.org/wikipedia/en/1/18/Benedict_Cumberbatch_as_Doctor_Strange.jpeg")
-        )
+        headerImage = view.findViewById(R.id.header_image)
+        headerTitle = view.findViewById(R.id.home_header_title_tv)
 
-        // Set the adapter
-        recyclerView1.adapter = context?.let { CustomAdapter(myList, it) }
+        database = MovieDatabase.getDatabase(requireContext())
+        apiService = RetrofitInstance.api
+        movieDao = database.movieDao()
+        repository = MovieRepository.getInstance(apiService, movieDao)
+        viewModel.setRepository(repository)
+        viewModel.loadMovies()
 
-        recyclerView2.adapter = context?.let { CustomAdapter(myList, it) }
+        viewModel.fetchTopRatedMovies()
+        viewModel.fetchNewReleasedMovies()
+        viewModel.fetchPopularMovies()
+        viewModel.fetchHeaderMovies()
+
+        setupObservers()
+        startHeaderUpdate()
+
+        textviewSeeAll1 = view.findViewById(R.id.see_all_tv1)
+        textviewSeeAll1.setOnClickListener { parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, Top10Fragment())
+            .addToBackStack(null)
+            .commit() }
+
+        textviewSeeAll2 = view.findViewById(R.id.see_all_tv2)
+        textviewSeeAll2.setOnClickListener { parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container_view, NewReleaseFragment())
+            .addToBackStack(null)
+            .commit() }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun setupObservers(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.headerMovies.collect { movies ->
+                        if (movies.isNotEmpty()) {
+                            updateHeader()
+                        }
+                    }
+                }
+
+                launch {
+                    viewModel.topRatedMovies.collect { movies ->
+                        topRatedMoviesAdapter.submitList(movies.take(10))
+                    }
+                }
+
+                launch {
+                    viewModel.newReleasedMovies.collect { movies ->
+                        newReleasedMoviesAdapter.submitList(movies.take(10))
+                    }
                 }
             }
+        }
     }
+
+    private fun startHeaderUpdate() {
+        handler.post(object : Runnable {
+            override fun run() {
+                updateHeader()
+                handler.postDelayed(this, 6000) 
+            }
+        })
+    }
+
+    private fun updateHeader() {
+        val movies = viewModel.headerMovies.value
+
+        if (movies.isEmpty() ) {
+            // Handling the case where movies or genres are empty
+            Log.e("HomeFragment", "movies list is null")
+            return
+        }
+
+        if (currentIndex >= movies.size) {
+            // Handling the case where currentIndex is out of bounds
+            currentIndex = 0
+        }
+
+        val movie = movies[currentIndex]
+
+        Glide.with(this)
+            .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
+            .into(headerImage)
+        headerTitle.text = movie.title
+
+        // Increment the index or reset if it reaches the end of the list
+        currentIndex = (currentIndex + 1) % movies.size
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacksAndMessages(null) // Stop the handler when the view is destroyed
+    }
+
 }
