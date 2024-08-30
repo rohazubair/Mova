@@ -3,19 +3,19 @@ package com.example.myapplication
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ExploreFragment : Fragment(R.layout.fragment_explore) {
@@ -37,14 +37,15 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
     private lateinit var movieDao : MovieDao
     private lateinit var repository : MovieRepository
 
+    private lateinit var filterBottomSheetFragment: BottomSheetFragment
+
+    private var searchJob: Job? = null
+
     private val movieAdapterListener=object: MoviesAdapter.Listener{
         override fun addRemoveMovie(movie: MovieDataModal) {
             viewModel.insertMovie(movie)
+            Toast.makeText(requireContext(), "Movie added to MyList", Toast.LENGTH_SHORT).show()
         }
-
-//        override fun deleteMovie(movieId: Int) {
-//            viewModel.deleteMovie(movieId)
-//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +70,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         movieDao = database.movieDao()
         repository = MovieRepository.getInstance(apiService, movieDao)
         viewModel.setRepository(repository)
-        viewModel.loadMovies()
 
         viewModel.fetchPopularMovies()
 
@@ -82,11 +82,15 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 s?.toString()?.let {
-                    if (it.isNotEmpty()) {
-                        viewModel.resetSearchResults()
-                        viewModel.searchMovies(it)
-                    } else {
-                        viewModel.updatePopularMovies()
+                    searchJob?.cancel()
+                    searchJob = lifecycleScope.launch {
+                        delay(1300)
+                        if (it.isNotEmpty()) {
+                            viewModel.resetSearchResults()
+                            viewModel.searchMovies(it)
+                        } else {
+                            viewModel.updatePopularMovies()
+                        }
                     }
                 }
             }
@@ -96,8 +100,8 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         })
 
         val filterBtn: ImageView = view.findViewById(R.id.explore_filter)
+        filterBottomSheetFragment = BottomSheetFragment()
         filterBtn.setOnClickListener{
-            val filterBottomSheetFragment = BottomSheetFragment()
             filterBottomSheetFragment.show(parentFragmentManager, filterBottomSheetFragment.tag)
 
             filterBottomSheetFragment.setOnFilterAppliedListener {genre, region, year, sortBy ->
@@ -108,10 +112,8 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             filterBottomSheetFragment.setOnResetListener {
                 viewModel.resetFilteredMovies()
                 viewModel.updatePopularMovies()
-               // showPopularMovies()
             }
         }
-
     }
 
     private fun setupObservers() {
@@ -127,20 +129,17 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                         }
                     }
                 }
-
                 launch {
-
                     viewModel.searchResults.collect { movies ->
                         if (movies.isEmpty() && searchEditText.text.isNotEmpty()) {
                             show404Error()
-                        } else {
+                        } else if (movies.isNotEmpty()) {
                             searchResultsAdapter.submitList(movies)
                             showSearchResults()
                         }
                     }
                 }
                 launch {
-
                     viewModel.filteredMovies.collect { movies ->
                         filterResultsAdapter.submitList(movies)
                         if (movies.isNotEmpty()) {
@@ -152,7 +151,11 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
                 }
             }
         }
-
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_container_view, LoginFragment())
+//                .commit()
+//        }, 2000)
     }
 
     private fun showPopularMovies() {
@@ -193,10 +196,33 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
     private fun createOnScrollListener(loadMoreAction: () -> Unit) = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            if (!recyclerView.canScrollVertically(1)) {
-                loadMoreAction()
+            val layoutManager = recyclerView.layoutManager as? GridLayoutManager
+            layoutManager?.let {
+                val totalItemCount = it.itemCount
+                val lastVisibleItemPosition = it.findLastVisibleItemPosition()
+
+                if (lastVisibleItemPosition >= totalItemCount / 2) {
+                    loadMoreAction()
+                }
             }
         }
     }
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_container_view, LoginFragment())
+//                .commit()
+//        }, 2000)
+
+    override fun onResume() {
+        super.onResume()
+
+        if (searchEditText.text.isNotEmpty()) {
+            showSearchResults()
+        } else {
+            showPopularMovies()
+        }
+    }
+
+
 
 }

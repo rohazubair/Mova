@@ -5,16 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 class MoviesAdapter(private val layout: Int = R.layout.movies_rv, private val listener: Listener) : ListAdapter<MovieDataModal, MoviesAdapter.MovieViewHolder>(DiffCallback()) {
 

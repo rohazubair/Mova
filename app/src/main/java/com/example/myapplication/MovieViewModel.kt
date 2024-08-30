@@ -3,7 +3,6 @@ package com.example.myapplication
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -55,6 +54,7 @@ class MovieViewModel() : ViewModel() {
     }
 
     fun fetchTopRatedMovies() {
+        Log.d("TAG", "fetchTopRatedMovies() called")
         viewModelScope.launch {
             repository?.let {
                 it.getTopRatedMovies(apiKey, topRatedPage).collect { movies ->
@@ -66,6 +66,8 @@ class MovieViewModel() : ViewModel() {
 
 
     fun fetchNewReleasedMovies() {
+        Log.d("TAG", "fetchNewReleasedMovies() called")
+
         viewModelScope.launch {
             repository?.let {
                 it.getNewReleasedMovies(apiKey, newReleasedPage).collect { movies ->
@@ -77,6 +79,8 @@ class MovieViewModel() : ViewModel() {
 
 
     fun fetchPopularMovies() {
+        Log.d("TAG", "fetchPopularMovies() called")
+
         viewModelScope.launch {
             repository?.let {
                 it.getPopularMovies(apiKey, popularPage).collect { movies ->
@@ -155,6 +159,7 @@ class MovieViewModel() : ViewModel() {
     }
 
     fun fetchHeaderMovies() {
+        Log.d("TAG", "fetchHeaderMovies() called")
         viewModelScope.launch {
             repository?.let {
                 it.getPopularMovies(apiKey, headerPage).collect { movies ->

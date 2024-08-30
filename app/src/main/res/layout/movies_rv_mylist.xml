@@ -6,17 +6,17 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
+    android:layout_margin="5dp"
     android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="187dp"
+        android:layout_height="263dp" >
 
         <ImageView
             android:id="@+id/movie_imageview"
-            android:layout_width="150dp"
-            android:layout_height="220dp"
-            android:layout_margin="5dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@+id/rating_tv"
@@ -43,7 +43,7 @@
             android:src="@drawable/baseline_clear_24"
             android:background="@drawable/textview_round_corner_red"
             android:layout_gravity="bottom|end"
-            android:layout_margin="10dp"/>
+            android:layout_margin="13dp"/>
 
     </FrameLayout>
 

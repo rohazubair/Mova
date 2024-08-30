@@ -7,7 +7,9 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
@@ -22,18 +24,12 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         rotateAnimation.repeatMode = ObjectAnimator.RESTART
         rotateAnimation.start()
 
-        // Delay for 2 seconds and then navigate to the LoginFragment
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container_view, LoginFragment())
-//                .commit()
-//        }, 2000)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            parentFragmentManager.commit {
-                replace(R.id.fragment_container_view, LoginFragment())
-            }
-        }, 2000)
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(2000)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_view, LoginFragment())
+                .commit()
+        }
     }
 
 }

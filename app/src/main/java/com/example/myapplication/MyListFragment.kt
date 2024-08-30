@@ -3,13 +3,13 @@ package com.example.myapplication
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -30,11 +30,8 @@ class MyListFragment : Fragment(R.layout.fragment_mylist) {
     private val movieAdapterListener=object: MoviesAdapter.Listener{
         override fun addRemoveMovie(movie: MovieDataModal) {
             viewModel.deleteMovie(movie.id)
+            Toast.makeText(requireContext(), "Movie has been deleted", Toast.LENGTH_SHORT).show()
         }
-
-//        override fun deleteMovie(movieId: Int) {
-//            viewModel.deleteMovie(movieId)
-//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

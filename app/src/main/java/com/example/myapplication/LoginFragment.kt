@@ -1,11 +1,9 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -16,7 +14,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         btnSignIn = view.findViewById(R.id.btnSignIn)
         btnSignIn.setOnClickListener { parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, NavigationFragment())
+            .replace(R.id.fragment_container_view, NavigationFragment(), "NavigationFragment")
             .commit() }
     }
 

@@ -22,21 +22,21 @@ class NavigationFragment : Fragment(R.layout.fragment_navigation) {
                     if (homeFragment == null) {
                         homeFragment = HomeFragment()
                     }
-                    loadFragment(homeFragment!!)
+                    loadFragment(homeFragment!!, "HomeFragment")
                     true
                 }
                 R.id.explore -> {
                     if (exploreFragment == null) {
                         exploreFragment = ExploreFragment()
                     }
-                    loadFragment(exploreFragment!!)
+                    loadFragment(exploreFragment!!, "ExploreFragment")
                     true
                 }
                 R.id.mylist -> {
                     if (myListFragment == null) {
                         myListFragment = MyListFragment()
                     }
-                    loadFragment(myListFragment!!)
+                    loadFragment(myListFragment!!, "MyListFragment")
                     true
                 }
                 else -> false
@@ -46,14 +46,40 @@ class NavigationFragment : Fragment(R.layout.fragment_navigation) {
         // Load the default fragment
         if (savedInstanceState == null) {
             homeFragment = HomeFragment()
-            loadFragment(homeFragment!!)
+            loadFragment(homeFragment!!, "HomeFragment")
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view2, fragment)
-            .commit()
-    }
+    private fun loadFragment(fragment: Fragment, tag: String) {
+        parentFragmentManager.beginTransaction().apply {
+            if (parentFragmentManager.findFragmentByTag(tag) != null) {
+                show(parentFragmentManager.findFragmentByTag(tag)!!)
+            } else {
+                add(R.id.fragment_container_view2, fragment, tag)
+            }
 
+            homeFragment?.let {
+                if (it != fragment) hide(
+                    parentFragmentManager.findFragmentByTag(
+                        "HomeFragment"
+                    )!!
+                )
+            }
+            exploreFragment?.let {
+                if (it != fragment) hide(
+                    parentFragmentManager.findFragmentByTag(
+                        "ExploreFragment"
+                    )!!
+                )
+            }
+            myListFragment?.let {
+                if (it != fragment) hide(
+                    parentFragmentManager.findFragmentByTag(
+                        "MyListFragment"
+                    )!!
+                )
+            }
+            commit()
+        }
+    }
 }

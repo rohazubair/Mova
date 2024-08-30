@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.plugin)
-
 }
 
 android {
@@ -59,7 +58,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.annotation)
+//    implementation(libs.androidx.annotation)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
@@ -70,7 +69,7 @@ dependencies {
     implementation (libs.converter.gson)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.material3.android)
-    annotationProcessor (libs.compiler.v4120)
+//    annotationProcessor (libs.compiler.v4120)
     implementation (libs.glide)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -16,9 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -33,11 +30,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var headerTitle: TextView
     private lateinit var textviewSeeAll1 : TextView
     private lateinit var textviewSeeAll2 : TextView
+    private lateinit var myListBtn : Button
 
     private lateinit var database : MovieDatabase
     private lateinit var apiService : TmdbApiService
     private lateinit var movieDao : MovieDao
     private lateinit var repository : MovieRepository
+
+    private lateinit var top10Fragment: Top10Fragment
+    private lateinit var newReleaseFragment: NewReleaseFragment
 
     private val handler = Handler(Looper.getMainLooper())
     private var currentIndex = 0
@@ -45,11 +46,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val movieAdapterListener=object: MoviesAdapter.Listener{
         override fun addRemoveMovie(movie: MovieDataModal) {
             viewModel.insertMovie(movie)
+            Toast.makeText(requireContext(), "Movie added to MyList", Toast.LENGTH_SHORT).show()
         }
-
-//        override fun deleteMovie(movieId: Int) {
-//            viewModel.deleteMovie(movieId)
-//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,11 +56,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         topRatedMoviesAdapter = MoviesAdapter(listener = movieAdapterListener)
         newReleasedMoviesAdapter = MoviesAdapter(listener = movieAdapterListener)
 
+        top10Fragment = Top10Fragment()
+        newReleaseFragment = NewReleaseFragment()
+
+        parentFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_view, top10Fragment, "Top10Fragment")
+            .hide(top10Fragment)
+            .commit()
+
+        parentFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_view, newReleaseFragment, "NewReleaseFragment")
+            .hide(newReleaseFragment)
+            .commit()
+
+        parentFragmentManager.beginTransaction()
+            .show(this@HomeFragment)
+            .commit()
+
         view.findViewById<RecyclerView>(R.id.top_10_movies).adapter = topRatedMoviesAdapter
         view.findViewById<RecyclerView>(R.id.new_releases).adapter = newReleasedMoviesAdapter
 
         headerImage = view.findViewById(R.id.header_image)
         headerTitle = view.findViewById(R.id.home_header_title_tv)
+        myListBtn = view.findViewById(R.id.home_header_plus_btn)
 
         database = MovieDatabase.getDatabase(requireContext())
         apiService = RetrofitInstance.api
@@ -73,23 +89,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewModel.fetchTopRatedMovies()
         viewModel.fetchNewReleasedMovies()
-        viewModel.fetchPopularMovies()
         viewModel.fetchHeaderMovies()
 
         setupObservers()
         startHeaderUpdate()
 
         textviewSeeAll1 = view.findViewById(R.id.see_all_tv1)
-        textviewSeeAll1.setOnClickListener { parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, Top10Fragment())
-            .addToBackStack(null)
-            .commit() }
+        textviewSeeAll1.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this@HomeFragment)
+                .hide(newReleaseFragment)
+                .hide(parentFragmentManager.findFragmentByTag("NavigationFragment")!!)
+                .show(top10Fragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
         textviewSeeAll2 = view.findViewById(R.id.see_all_tv2)
-        textviewSeeAll2.setOnClickListener { parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_view, NewReleaseFragment())
-            .addToBackStack(null)
-            .commit() }
+        textviewSeeAll2.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .hide(this@HomeFragment)
+                .hide(top10Fragment)
+                .hide(parentFragmentManager.findFragmentByTag("NavigationFragment")!!)
+                .show(newReleaseFragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
     }
 
@@ -143,6 +168,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         val movie = movies[currentIndex]
+        myListBtn.setOnClickListener {
+            movieAdapterListener.addRemoveMovie(movie)
+        }
 
         Glide.with(this)
             .load("https://image.tmdb.org/t/p/w500${movie.poster_path}")
